@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.CustomersController"
+            styleClass="root-pane" prefWidth="1050" prefHeight="700">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
+            <Label text="👤 Customer Management" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="16" styleClass="content-hbox">
+
+            <!-- LEFT: Search + Table -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="searchField" promptText="Search by name / phone / email" prefWidth="280"/>
+                    <Button text="🔍 Search" onAction="#handleSearch" styleClass="btn-small"/>
+                    <Button text="Show All"  onAction="#handleClear"  styleClass="btn-outline-small"/>
+                </HBox>
+
+                <TableView fx:id="customersTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId"      text="ID"       prefWidth="60"/>
+                        <TableColumn fx:id="colName"    text="Name"     prefWidth="160"/>
+                        <TableColumn fx:id="colPhone"   text="Phone"    prefWidth="120"/>
+                        <TableColumn fx:id="colEmail"   text="Email"    prefWidth="180"/>
+                        <TableColumn fx:id="colIdProof" text="ID Proof" prefWidth="130"/>
+                    </columns>
+                    <placeholder><Label text="No customers found."/></placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT: Form -->
+            <VBox spacing="12" prefWidth="280" styleClass="panel form-panel">
+                <Label text="Customer Details" styleClass="form-title"/>
+
+                <Label text="Full Name *"/>
+                <TextField fx:id="nameField" promptText="Enter full name"/>
+
+                <Label text="Phone Number *"/>
+                <TextField fx:id="phoneField" promptText="10-digit mobile number"/>
+
+                <Label text="Email Address"/>
+                <TextField fx:id="emailField" promptText="example@email.com"/>
+
+                <Label text="ID Proof (optional)"/>
+                <TextField fx:id="idProofField" promptText="Aadhar / PAN / Passport"/>
+
+                <Separator/>
+
+                <VBox spacing="8">
+                    <Button text="➕ Add Customer"    onAction="#handleAdd"    styleClass="btn-primary"   maxWidth="Infinity"/>
+                    <Button text="✏ Update Customer"  onAction="#handleUpdate" styleClass="btn-secondary" maxWidth="Infinity"/>
+                    <Button text="🗑 Delete Customer"  onAction="#handleDelete" styleClass="btn-danger"    maxWidth="Infinity"/>
+                    <Button text="✖ Clear"             onAction="#handleClear"  styleClass="btn-outline"   maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

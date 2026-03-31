@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.String?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.DashboardController"
+            styleClass="root-pane" prefWidth="1200" prefHeight="760">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <ImageView fitWidth="34" fitHeight="34" pickOnBounds="true" preserveRatio="true" styleClass="topbar-logo">
+                <image>
+                    <Image url="@/assets/logo.png"/>
+                </image>
+            </ImageView>
+            <Label text="Aurelia Suites" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Dashboard" styleClass="topbar-subtitle"/>
+            <Button text="Refresh" onAction="#handleRefresh" styleClass="btn-small"/>
+            <Button text="Logout" onAction="#handleLogout" styleClass="btn-danger-small"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+            <VBox spacing="24" styleClass="dashboard-content" maxWidth="Infinity">
+
+                <!-- Stats Row -->
+                <Label text="Overview" styleClass="section-title"/>
+                <HBox spacing="16">
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <Label text="Total Rooms" styleClass="stat-label"/>
+                        <Label fx:id="totalRoomsLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <styleClass>
+                            <String fx:value="stat-card"/>
+                            <String fx:value="stat-green"/>
+                        </styleClass>
+                        <Label text="Available" styleClass="stat-label"/>
+                        <Label fx:id="availableRoomsLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <styleClass>
+                            <String fx:value="stat-card"/>
+                            <String fx:value="stat-red"/>
+                        </styleClass>
+                        <Label text="Occupied" styleClass="stat-label"/>
+                        <Label fx:id="occupiedRoomsLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <styleClass>
+                            <String fx:value="stat-card"/>
+                            <String fx:value="stat-blue"/>
+                        </styleClass>
+                        <Label text="Today's Bookings" styleClass="stat-label"/>
+                        <Label fx:id="todayBookingsLabel" text="0" styleClass="stat-value"/>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <styleClass>
+                            <String fx:value="stat-card"/>
+                            <String fx:value="stat-purple"/>
+                        </styleClass>
+                        <Label text="Total Revenue" styleClass="stat-label"/>
+                        <Label fx:id="totalRevenueLabel" text="₹0" styleClass="stat-value"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Navigation -->
+                <Label text="Modules" styleClass="section-title"/>
+                <GridPane hgap="16" vgap="16" maxWidth="Infinity">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" fillWidth="true"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" fillWidth="true"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.34" fillWidth="true"/>
+                    </columnConstraints>
+                    <Button text="🛏 Rooms" onAction="#goToRooms" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Button text="👤 Customers" onAction="#goToCustomers" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Button text="📅 Bookings" onAction="#goToBookings" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <Button fx:id="staffModuleButton" text="👨‍💼 Staff" onAction="#goToStaff" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Button text="🛎 Services" onAction="#goToServices" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Button fx:id="reportsModuleButton" text="📊 Reports" onAction="#goToReports" styleClass="nav-btn" maxWidth="Infinity" prefHeight="95" GridPane.hgrow="ALWAYS" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                </GridPane>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.RoomsController"
+            styleClass="root-pane" prefWidth="1050" prefHeight="700">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
+            <Label text="🛏 Room Management" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="16" styleClass="content-hbox">
+
+            <!-- LEFT: Table + Filter -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Filter:"/>
+                    <ComboBox fx:id="filterCombo" prefWidth="160"/>
+                    <Button text="Apply" onAction="#handleFilter" styleClass="btn-small"/>
+                </HBox>
+                <TableView fx:id="roomsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colRoomNumber" text="Room #" prefWidth="80"/>
+                        <TableColumn fx:id="colType"       text="Type"   prefWidth="100"/>
+                        <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+                        <TableColumn fx:id="colPrice"       text="Price/Night" prefWidth="110"/>
+                        <TableColumn fx:id="colAvailable"   text="Status"      prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="No rooms found."/></placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT: Form -->
+            <VBox spacing="12" prefWidth="280" styleClass="panel form-panel">
+                <Label text="Room Details" styleClass="form-title"/>
+
+                <Label text="Room Number *"/>
+                <TextField fx:id="roomNumberField" promptText="e.g. 101"/>
+
+                <Label text="Room Type *"/>
+                <ComboBox fx:id="roomTypeCombo" maxWidth="Infinity"/>
+
+                <Label text="Description *"/>
+                <TextField fx:id="descriptionField" promptText="Short description"/>
+
+                <Label text="Price Per Night (₹) *"/>
+                <TextField fx:id="priceField" promptText="e.g. 2500"/>
+
+                <Separator/>
+
+                <VBox spacing="8">
+                    <Button text="➕ Add Room"    onAction="#handleAdd"    styleClass="btn-primary" maxWidth="Infinity"/>
+                    <Button text="✏ Update Room"  onAction="#handleUpdate" styleClass="btn-secondary" maxWidth="Infinity"/>
+                    <Button text="🗑 Delete Room"  onAction="#handleDelete" styleClass="btn-danger" maxWidth="Infinity"/>
+                    <Button text="✖ Clear"         onAction="#handleClear"  styleClass="btn-outline" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

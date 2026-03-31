@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.StaffController"
+            styleClass="root-pane" prefWidth="1050" prefHeight="700">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
+            <Label text="👨‍💼 Staff Management" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="16" styleClass="content-hbox">
+
+            <!-- LEFT: Staff Table -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <TableView fx:id="staffTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId"    text="ID"   prefWidth="55"/>
+                        <TableColumn fx:id="colName"  text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="colRole"  text="Role" prefWidth="120"/>
+                        <TableColumn fx:id="colPhone" text="Phone" prefWidth="120"/>
+                        <TableColumn fx:id="colTask"  text="Current Task" prefWidth="180"/>
+                        <TableColumn fx:id="colDuty"  text="Status" prefWidth="90"/>
+                    </columns>
+                    <placeholder><Label text="No staff found."/></placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT: Forms -->
+            <VBox spacing="14" prefWidth="320" styleClass="panel form-panel">
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                    <content>
+                        <VBox spacing="14" prefWidth="290">
+
+                            <!-- Add/Update Staff -->
+                            <Label text="Staff Details" styleClass="form-title"/>
+                            <Label text="Full Name *"/>
+                            <TextField fx:id="nameField" promptText="Staff name"/>
+
+                            <Label text="Role *"/>
+                            <ComboBox fx:id="roleCombo" maxWidth="Infinity"/>
+
+                            <Label text="Phone Number *"/>
+                            <TextField fx:id="phoneField" promptText="Mobile number"/>
+
+                            <HBox spacing="8">
+                                <Button text="➕ Add"    onAction="#handleAdd"    styleClass="btn-primary"   HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Button text="✏ Update" onAction="#handleUpdate" styleClass="btn-secondary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                <Button text="🗑"        onAction="#handleDelete" styleClass="btn-danger"/>
+                            </HBox>
+
+                            <Separator/>
+
+                            <Label text="Duty Management" styleClass="form-title"/>
+                            <Button text="🔁 Toggle On Duty / Off Duty"
+                                    onAction="#handleToggleDuty"
+                                    styleClass="btn-thread" maxWidth="Infinity"/>
+                            <Label text="Set Off Duty for holidays/leaves. Current task will be marked Idle." styleClass="hint-text" wrapText="true"/>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

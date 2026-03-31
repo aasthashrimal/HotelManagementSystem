@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.BookingsController"
+            styleClass="root-pane" prefWidth="1200" prefHeight="740">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
+            <Label text="📅 Booking Management" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="14" styleClass="content-hbox">
+
+            <!-- LEFT: Booking List -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Filter:"/>
+                    <ComboBox fx:id="filterCombo" prefWidth="150"/>
+                    <Button text="Apply" onAction="#handleFilter" styleClass="btn-small"/>
+                </HBox>
+
+                <TableView fx:id="bookingsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId"       text="ID"       prefWidth="55"/>
+                        <TableColumn fx:id="colCustomer" text="Customer" prefWidth="140"/>
+                        <TableColumn fx:id="colRoom"     text="Room"     prefWidth="65"/>
+                        <TableColumn fx:id="colCheckIn"  text="Check-In" prefWidth="100"/>
+                        <TableColumn fx:id="colCheckOut" text="Check-Out" prefWidth="100"/>
+                        <TableColumn fx:id="colAmount"   text="Amount"   prefWidth="95"/>
+                        <TableColumn fx:id="colStatus"   text="Status"   prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="No bookings found."/></placeholder>
+                </TableView>
+
+                <HBox spacing="8">
+                    <Button text="✔ Check Out"       onAction="#handleCheckOut"       styleClass="btn-secondary"/>
+                    <Button text="✘ Cancel Booking"  onAction="#handleCancel"         styleClass="btn-danger"/>
+                    <Button text="🧾 Generate Invoice" onAction="#handleGenerateInvoice" styleClass="btn-outline"/>
+                </HBox>
+            </VBox>
+
+            <!-- MIDDLE: New Booking Form -->
+            <VBox spacing="10" prefWidth="260" styleClass="panel form-panel">
+                <Label text="New Booking" styleClass="form-title"/>
+
+                <Label text="Select Customer *"/>
+                <ComboBox fx:id="customerCombo" maxWidth="Infinity"/>
+
+                <Label text="Select Room *"/>
+                    <ComboBox fx:id="roomCombo" maxWidth="Infinity" styleClass="room-selector"/>
+
+                <Label text="Check-In Date *"/>
+                <DatePicker fx:id="checkInPicker" maxWidth="Infinity"/>
+
+                <Label text="Check-Out Date *"/>
+                <DatePicker fx:id="checkOutPicker" maxWidth="Infinity"/>
+
+                <Label fx:id="pricePreviewLabel" styleClass="price-preview" wrapText="true"/>
+
+                <Separator/>
+                <Button text="📅 Book Room" onAction="#handleBook" styleClass="btn-primary" maxWidth="Infinity"/>
+            </VBox>
+
+        </HBox>
+    </center>
+</BorderPane>

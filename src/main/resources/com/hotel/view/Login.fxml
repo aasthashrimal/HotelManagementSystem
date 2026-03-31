@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.hotel.controller.LoginController"
+           styleClass="root-pane">
+
+    <VBox alignment="CENTER" spacing="0" maxWidth="420" maxHeight="500"
+          styleClass="login-card">
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="6" styleClass="login-header">
+            <ImageView fitWidth="82" fitHeight="82" pickOnBounds="true" preserveRatio="true" styleClass="brand-logo">
+                <image>
+                    <Image url="@/assets/logo.png"/>
+                </image>
+            </ImageView>
+            <Label text="Aurelia Suites" styleClass="login-title"/>
+            <Label text="Management System" styleClass="login-subtitle"/>
+        </VBox>
+
+        <!-- Form -->
+        <VBox spacing="14" styleClass="login-form">
+            <Label text="Username"/>
+            <TextField fx:id="usernameField" promptText="Enter username"/>
+
+            <Label text="Password"/>
+            <PasswordField fx:id="passwordField" promptText="Enter password"/>
+
+            <Label text="Role"/>
+            <ComboBox fx:id="roleCombo" maxWidth="Infinity"/>
+
+            <Label fx:id="errorLabel" styleClass="error-label"/>
+
+            <HBox spacing="10">
+                <Button text="LOGIN" onAction="#handleLogin" styleClass="btn-primary" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <Button text="CLEAR" onAction="#handleClear" styleClass="btn-secondary"/>
+            </HBox>
+
+            <Label text="Admin: admin/admin123 | Staff: staff/staff123" styleClass="hint-text" alignment="CENTER"/>
+        </VBox>
+    </VBox>
+</StackPane>

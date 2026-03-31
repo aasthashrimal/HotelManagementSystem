@@ -1,0 +1,65 @@
+# Maven build output
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+
+# Project-specific directories
+reports/
+invoices/
+backup/
+*.ser
+*.db
+*.db-journal
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-workspace
+*.sublime-project
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/
+nb-configuration.xml
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Misc
+.gradle/
+build/
+dist/
+lib/
+.env
+.env.local
+node_modules/

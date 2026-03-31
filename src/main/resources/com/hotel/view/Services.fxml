@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.ServicesController"
+            styleClass="root-pane" prefWidth="900" prefHeight="640">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
+            <Label text="🛎 Hotel Services" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="16" styleClass="content-hbox">
+            <SplitPane dividerPositions="0.38" HBox.hgrow="ALWAYS">
+
+            <!-- LEFT: Add Service Form -->
+            <VBox spacing="12" styleClass="panel">
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                    <content>
+                        <VBox spacing="12" prefWidth="300" style="-fx-padding: 8;">
+                            <Label text="Add / Update Service Request" styleClass="form-title"/>
+
+                            <Label text="Select Active Booking *"/>
+                            <ComboBox fx:id="bookingCombo" maxWidth="Infinity"/>
+
+                            <Label text="Service Type *"/>
+                            <ComboBox fx:id="serviceTypeCombo" maxWidth="Infinity"/>
+
+                            <Label text="Custom Service (if OTHERS)"/>
+                            <TextField fx:id="customServiceTypeField" promptText="e.g. AIRPORT_PICKUP"/>
+
+                            <Label text="Description"/>
+                            <TextField fx:id="descriptionField" promptText="e.g. 2 veg meals, Room 201"/>
+
+                            <Label text="Charge (₹)"/>
+                            <TextField fx:id="amountField" promptText="0.00"/>
+
+                            <Label text="Assigned Staff *"/>
+                            <ComboBox fx:id="assignedStaffCombo" maxWidth="Infinity"/>
+                            <Label fx:id="staffAvailabilityHintLabel"
+                                text="If no staff is available, keep this unassigned and save as PENDING."
+                                styleClass="hint-text" wrapText="true"/>
+
+                            <Separator/>
+                            <Button text="➕ Add Service Request" onAction="#handleAddService"
+                                    styleClass="btn-primary" maxWidth="Infinity"/>
+
+                            <Separator/>
+                            <Label text="Update Existing Service" styleClass="form-title"/>
+                            <Label text="Service ID *"/>
+                            <TextField fx:id="serviceIdField" promptText="Auto-fills when selecting a row"/>
+
+                            <Label text="Status *"/>
+                            <ComboBox fx:id="updateStatusCombo" maxWidth="Infinity"/>
+
+                            <Button text="✔ Save Service" onAction="#handleMarkDone"
+                                styleClass="btn-secondary" maxWidth="Infinity"/>
+
+                            <VBox spacing="4" styleClass="hint-box">
+                                <Label text="Tip:" styleClass="hint-title"/>
+                                <Label text="Select a row from the table to auto-fill service details for update." styleClass="hint-text" wrapText="true"/>
+                            </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <!-- RIGHT: Services List -->
+            <VBox spacing="8" styleClass="panel">
+                <Label text="Services for Selected Booking" styleClass="form-title"/>
+                <TableView fx:id="servicesTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colServiceId" text="ID" prefWidth="65"/>
+                        <TableColumn fx:id="colServiceType" text="Type" prefWidth="170"/>
+                        <TableColumn fx:id="colServiceDescription" text="Description" prefWidth="230"/>
+                        <TableColumn fx:id="colServiceHandler" text="Handled By" prefWidth="150"/>
+                        <TableColumn fx:id="colServiceAmount" text="Amount" prefWidth="110"/>
+                        <TableColumn fx:id="colServiceStatus" text="Status" prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="Select a booking to view services."/></placeholder>
+                </TableView>
+                <Label fx:id="totalChargesLabel" text="Total Service Charges: Rs.0.00" styleClass="price-preview"/>
+            </VBox>
+
+        </SplitPane>
+        </HBox>
+    </center>
+</BorderPane>
