@@ -1,4 +1,4 @@
-# 🏨 Hotel Grand – Management System
+# 🏨 Hotel Aurelia Suites – Management System
 ### College Project | Java + JavaFX + SQLite
 
 ---
