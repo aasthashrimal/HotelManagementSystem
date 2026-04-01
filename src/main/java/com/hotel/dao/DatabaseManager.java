@@ -49,7 +49,8 @@ public class DatabaseManager {
                     name TEXT NOT NULL,
                     phone TEXT NOT NULL,
                     email TEXT,
-                    id_proof TEXT
+                    id_proof TEXT,
+                    password TEXT DEFAULT '1234'
                 )
             """);
 
@@ -98,6 +99,13 @@ public class DatabaseManager {
                 stmt.execute("ALTER TABLE services ADD COLUMN staff_id INTEGER");
             } catch (SQLException ignored) {
                 // Column already exists on existing databases
+            }
+
+            // Migration for customer login portal
+            try {
+                stmt.execute("ALTER TABLE customers ADD COLUMN password TEXT DEFAULT '1234'");
+            } catch (SQLException ignored) {
+                // Column already exists
             }
 
             insertSampleData(conn);

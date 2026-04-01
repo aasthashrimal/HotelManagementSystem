@@ -50,6 +50,14 @@
     -fx-border-color: #9db7e8;
 }
 
+.no-card-panel {
+    -fx-background-color: linear-gradient(to bottom, #e7efff 0%, #d9e6ff 100%);
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 16;
+}
+
 .content-hbox,
 .content-vbox {
     -fx-padding: 16;
@@ -121,6 +129,38 @@ ComboBox .arrow-button {
 ComboBox-popup .list-view {
     -fx-background-color: #ffffff;
     -fx-border-color: #d1d5db;
+}
+
+.form-panel TextField,
+.form-panel PasswordField,
+.form-panel TextArea {
+    -fx-background-color: #edf3ff;
+    -fx-border-color: #9db7e8;
+}
+
+.form-panel ComboBox {
+    -fx-background-color: #edf3ff;
+    -fx-border-color: #9db7e8;
+}
+
+.form-panel .text-field,
+.form-panel .password-field,
+.form-panel .text-area,
+.form-panel .combo-box,
+.form-panel .combo-box-base {
+    -fx-background-color: #edf3ff;
+    -fx-border-color: #9db7e8;
+}
+
+.form-panel .text-area .content,
+.form-panel .combo-box .list-cell,
+.form-panel .combo-box-base .list-cell {
+    -fx-background-color: #edf3ff;
+    -fx-text-fill: #1f2937;
+}
+
+.form-panel .combo-box .arrow-button {
+    -fx-background-color: #dbe8ff;
 }
 
 /* ---- ROOM SELECTOR ---- */

@@ -128,6 +128,12 @@ public class RoomsController {
     }
 
     @FXML
+    private void handleRefresh() {
+        loadRooms();
+        setStatus("Rooms list refreshed.", false);
+    }
+
+    @FXML
     private void handleFilter() {
         switch (filterCombo.getValue()) {
             case "Available Today"  -> roomList.setAll(roomService.getAvailableRoomsToday());

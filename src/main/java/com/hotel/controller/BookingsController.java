@@ -307,6 +307,13 @@ public class BookingsController {
         }
         setStatus(bookingList.size() + " bookings shown.", false);
     }
+    
+    @FXML
+    private void handleRefresh() {
+        loadBookings();
+        refreshRoomComboForDates();
+        setStatus("Bookings synced successfully from DB.", false);
+    }
 
     private InvoiceService.InvoiceResult showInvoicePreview(Booking b) {
         try {

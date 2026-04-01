@@ -20,8 +20,8 @@
             <Label text="Aurelia Suites" styleClass="topbar-title"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label text="Dashboard" styleClass="topbar-subtitle"/>
-            <Button text="Refresh" onAction="#handleRefresh" styleClass="btn-small"/>
-            <Button text="Logout" onAction="#handleLogout" styleClass="btn-danger-small"/>
+            <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-outline-small"/>
+            <Button text="🚪 Logout" onAction="#handleLogout" styleClass="btn-danger-small"/>
         </HBox>
     </top>
 

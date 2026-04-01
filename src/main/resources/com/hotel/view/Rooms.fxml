@@ -24,6 +24,8 @@
                     <Label text="Filter:"/>
                     <ComboBox fx:id="filterCombo" prefWidth="160"/>
                     <Button text="Apply" onAction="#handleFilter" styleClass="btn-small"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-outline-small"/>
                 </HBox>
                 <TableView fx:id="roomsTable" VBox.vgrow="ALWAYS">
                     <columns>

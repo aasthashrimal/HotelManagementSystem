@@ -16,7 +16,7 @@ public class ServiceDAO {
     public int addService(int bookingId, String type, String desc, double amount, Integer staffId) {
         String sql = "INSERT INTO services (booking_id, service_type, description, amount, status, staff_id) VALUES (?,?,?,?,'PENDING',?)";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, bookingId);
             ps.setString(2, type);

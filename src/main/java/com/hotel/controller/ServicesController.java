@@ -192,12 +192,12 @@ public class ServicesController {
     }
 
     @FXML
-    private void handleMarkDone() {
+    private void handleUpdateService() {
         Booking booking = bookingCombo.getValue();
         if (booking == null) { setStatus("Select an active booking first.", true); return; }
 
         String idText = serviceIdField.getText() == null ? "" : serviceIdField.getText().trim();
-        if (idText.isEmpty()) { setStatus("Enter a Service ID to mark as DONE.", true); return; }
+        if (idText.isEmpty()) { setStatus("Enter a Service ID to update.", true); return; }
 
         int serviceId;
         try {
@@ -230,8 +230,18 @@ public class ServicesController {
             .findFirst()
             .orElse(null);
 
+        if (existingRow != null && "DONE".equals(existingRow.status())) {
+            setStatus("This service is already DONE and cannot be changed.", true);
+            return;
+        }
+
         Integer existingStaffId = existingRow == null ? null : existingRow.staffId();
         Integer newStaffId = assigned == null ? null : assigned.getStaffId();
+        
+        if (newStaffId == null && !status.equals("PENDING") && !status.equals("CANCELLED")) {
+            setStatus("Cannot change status to " + status + " without assigning Staff first.", true);
+            return;
+        }
 
         if (newStaffId != null && !isStaffAssignable(newStaffId, serviceId)) {
             setStatus("Selected staff is busy with another service. Complete that first.", true);
@@ -321,6 +331,7 @@ public class ServicesController {
         List<Staff> candidates = staffDAO.getAllStaff().stream()
             .filter(Staff::isOnDuty)
             .filter(s -> "Idle".equalsIgnoreCase(s.getCurrentTask()) || (includeStaffId != null && s.getStaffId() == includeStaffId))
+            .filter(s -> s.getRole() != Staff.Role.MANAGER && s.getRole() != Staff.Role.RECEPTIONIST)
             .collect(Collectors.toList());
         assignedStaffCombo.setItems(FXCollections.observableArrayList(candidates));
 
@@ -355,6 +366,13 @@ public class ServicesController {
             .orElse(false);
     }
 
+    @FXML 
+    private void handleRefresh() {
+        Booking b = bookingCombo.getValue();
+        loadServices(b);
+        setStatus("Services refreshed.", false);
+    }
+    
     @FXML private void handleBack() { MainApp.navigateTo("Dashboard.fxml"); }
 
     private void setStatus(String msg, boolean isError) {

@@ -127,6 +127,7 @@ public class CustomersController {
     }
 
     @FXML private void handleClear() { clearForm(); searchField.clear(); loadCustomers(); }
+    @FXML private void handleRefresh() { loadCustomers(); setStatus("Customers list refreshed.", false); }
     @FXML private void handleBack()  { MainApp.navigateTo("Dashboard.fxml"); }
 
     private void populateForm(Customer c) {

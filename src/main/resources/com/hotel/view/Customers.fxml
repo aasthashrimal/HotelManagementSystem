@@ -24,6 +24,8 @@
                     <TextField fx:id="searchField" promptText="Search by name / phone / email" prefWidth="280"/>
                     <Button text="🔍 Search" onAction="#handleSearch" styleClass="btn-small"/>
                     <Button text="Show All"  onAction="#handleClear"  styleClass="btn-outline-small"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-outline-small"/>
                 </HBox>
 
                 <TableView fx:id="customersTable" VBox.vgrow="ALWAYS">

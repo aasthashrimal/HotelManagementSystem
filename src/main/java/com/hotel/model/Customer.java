@@ -15,6 +15,7 @@ public class Customer implements Serializable {
     private String phone;
     private String email;
     private String idProof;   // Optional: Aadhar/PAN/Passport
+    private String password;  // WEEK 11 - Customer Portal
 
     // WEEK 1 - Constructor overloading
     public Customer(String name, String phone, String email) {
@@ -22,6 +23,7 @@ public class Customer implements Serializable {
         this.phone = phone;
         this.email = email;
         this.idProof = "";
+        this.password = "1234"; // default
     }
 
     public Customer(int customerId, String name, String phone, String email, String idProof) {
@@ -30,6 +32,16 @@ public class Customer implements Serializable {
         this.phone = phone;
         this.email = email;
         this.idProof = idProof;
+        this.password = "1234"; // Default for existing rows without it
+    }
+
+    public Customer(int customerId, String name, String phone, String email, String idProof, String password) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.idProof = idProof;
+        this.password = password;
     }
 
     // WEEK 1 - Encapsulation: Getters and Setters
@@ -47,6 +59,9 @@ public class Customer implements Serializable {
 
     public String getIdProof() { return idProof; }
     public void setIdProof(String idProof) { this.idProof = idProof; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     @Override
     public String toString() {

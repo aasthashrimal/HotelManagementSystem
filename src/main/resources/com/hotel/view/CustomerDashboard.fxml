@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hotel.controller.CustomerDashboardController"
+            styleClass="root-pane" prefWidth="1200" prefHeight="740">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <Label fx:id="welcomeLabel" text="👋 Welcome, Guest" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+            <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-outline-small"/>
+            <Button text="🚪 Logout" onAction="#handleLogout" styleClass="btn-outline-small"/>
+            <Button text="🗑 Delete Account" onAction="#handleDeleteAccount" styleClass="btn-danger-small"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="14" styleClass="content-hbox">
+            
+            <!-- LEFT COLUMN: Bookings -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <Label text="My Bookings" styleClass="form-title"/>
+                <TableView fx:id="bookingsTable" VBox.vgrow="ALWAYS" prefHeight="200">
+                    <columns>
+                        <TableColumn fx:id="colRoom"     text="Room"     prefWidth="80"/>
+                        <TableColumn fx:id="colCheckIn"  text="Check-In" prefWidth="120"/>
+                        <TableColumn fx:id="colCheckOut" text="Check-Out" prefWidth="120"/>
+                        <TableColumn fx:id="colAmount"   text="Amount"   prefWidth="100"/>
+                        <TableColumn fx:id="colStatus"   text="Status"   prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="You have no bookings."/></placeholder>
+                </TableView>
+
+                <Separator/>
+
+                <Label text="New Booking" styleClass="form-title"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Dates:"/>
+                    <DatePicker fx:id="checkInPicker" promptText="Check-In" prefWidth="130"/>
+                    <DatePicker fx:id="checkOutPicker" promptText="Check-Out" prefWidth="130"/>
+                    <Label text="Room:"/>
+                    <ComboBox fx:id="roomCombo" prefWidth="250"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="pricePreviewLabel" styleClass="price-preview"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="📅 Confirm Booking" onAction="#handleBook" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
+
+            <!-- RIGHT COLUMN: Services / Food -->
+            <VBox spacing="10" prefWidth="450" styleClass="panel form-panel">
+                <Label text="Room Service &amp; Requests" styleClass="form-title"/>
+                
+                <Label text="Select Active Booking (Required for Services)"/>
+                <ComboBox fx:id="activeBookingCombo" maxWidth="Infinity"/>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Order Food"/>
+                        <ComboBox fx:id="foodMenuCombo" editable="true" maxWidth="Infinity" promptText="Select or type..."/>
+                        <Button text="🍔 Order Item" onAction="#handleOrderFood" styleClass="btn-primary" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Other Requests"/>
+                        <ComboBox fx:id="serviceCombo" editable="true" maxWidth="Infinity" promptText="Select or type..."/>
+                        <Button text="🛎 Request" onAction="#handleRequestService" styleClass="btn-secondary" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+
+                <Separator/>
+
+                <Label text="My Requests Status" styleClass="form-title"/>
+                <TableView fx:id="servicesTable" VBox.vgrow="ALWAYS" prefHeight="250">
+                    <columns>
+                        <TableColumn fx:id="colServiceType" text="Type" prefWidth="130"/>
+                        <TableColumn fx:id="colServiceDesc" text="Request" prefWidth="150"/>
+                        <TableColumn fx:id="colServiceStatus" text="Status" prefWidth="120"/>
+                    </columns>
+                    <placeholder><Label text="No active requests."/></placeholder>
+                </TableView>
+            </VBox>
+
+        </HBox>
+    </center>
+</BorderPane>

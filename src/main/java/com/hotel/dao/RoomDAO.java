@@ -95,12 +95,49 @@ public class RoomDAO {
     }
 
     public boolean deleteRoom(int roomNumber) {
-        String sql = "DELETE FROM rooms WHERE room_number = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, roomNumber);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); return false; }
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // Delete services belonging to bookings of this room
+                String findBookingsSql = "SELECT booking_id FROM bookings WHERE room_number = ?";
+                try (PreparedStatement fb = conn.prepareStatement(findBookingsSql)) {
+                    fb.setInt(1, roomNumber);
+                    ResultSet rs = fb.executeQuery();
+                    while (rs.next()) {
+                        int bId = rs.getInt(1);
+                        try (PreparedStatement ds = conn.prepareStatement("DELETE FROM services WHERE booking_id = ?")) {
+                            ds.setInt(1, bId);
+                            ds.executeUpdate();
+                        }
+                    }
+                }
+
+                // Delete bookings
+                try (PreparedStatement db = conn.prepareStatement("DELETE FROM bookings WHERE room_number = ?")) {
+                    db.setInt(1, roomNumber);
+                    db.executeUpdate();
+                }
+
+                // Delete room
+                boolean success;
+                try (PreparedStatement dr = conn.prepareStatement("DELETE FROM rooms WHERE room_number = ?")) {
+                    dr.setInt(1, roomNumber);
+                    success = dr.executeUpdate() > 0;
+                }
+
+                conn.commit();
+                return success;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

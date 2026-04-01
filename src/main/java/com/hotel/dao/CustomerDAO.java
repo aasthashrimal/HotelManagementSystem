@@ -43,7 +43,7 @@ public class CustomerDAO {
     }
 
     public int addCustomer(Customer c) {
-        String sql = "INSERT INTO customers (name, phone, email, id_proof) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO customers (name, phone, email, id_proof, password) VALUES (?,?,?,?,?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -51,6 +51,7 @@ public class CustomerDAO {
             ps.setString(2, c.getPhone());
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getIdProof());
+            ps.setString(5, c.getPassword() != null ? c.getPassword() : "1234");
             ps.executeUpdate();
 
             ResultSet keys = ps.getGeneratedKeys();
@@ -63,7 +64,7 @@ public class CustomerDAO {
     }
 
     public boolean updateCustomer(Customer c) {
-        String sql = "UPDATE customers SET name=?, phone=?, email=?, id_proof=? WHERE customer_id=?";
+        String sql = "UPDATE customers SET name=?, phone=?, email=?, id_proof=?, password=? WHERE customer_id=?";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -71,7 +72,8 @@ public class CustomerDAO {
             ps.setString(2, c.getPhone());
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getIdProof());
-            ps.setInt(5, c.getCustomerId());
+            ps.setString(5, c.getPassword() != null ? c.getPassword() : "1234");
+            ps.setInt(6, c.getCustomerId());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -81,13 +83,45 @@ public class CustomerDAO {
     }
 
     public boolean deleteCustomer(int id) {
-        String sql = "DELETE FROM customers WHERE customer_id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false); // Begin transaction
+            try {
+                // Find and delete all services belonging to customer's bookings
+                String findBookingsSql = "SELECT booking_id FROM bookings WHERE customer_id = ?";
+                try (PreparedStatement fb = conn.prepareStatement(findBookingsSql)) {
+                    fb.setInt(1, id);
+                    ResultSet rs = fb.executeQuery();
+                    while (rs.next()) {
+                        int bId = rs.getInt(1);
+                        try (PreparedStatement ds = conn.prepareStatement("DELETE FROM services WHERE booking_id = ?")) {
+                            ds.setInt(1, bId);
+                            ds.executeUpdate();
+                        }
+                    }
+                }
 
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+                // Delete bookings
+                try (PreparedStatement db = conn.prepareStatement("DELETE FROM bookings WHERE customer_id = ?")) {
+                    db.setInt(1, id);
+                    db.executeUpdate();
+                }
 
+                // Finally delete customer
+                boolean success;
+                try (PreparedStatement dc = conn.prepareStatement("DELETE FROM customers WHERE customer_id = ?")) {
+                    dc.setInt(1, id);
+                    success = dc.executeUpdate() > 0;
+                }
+
+                conn.commit();
+                return success;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -115,12 +149,34 @@ public class CustomerDAO {
     }
 
     private Customer mapRow(ResultSet rs) throws SQLException {
+        // Safe get for password because old schema might not have it before migration strictly ran
+        String pwd = "1234";
+        try {
+            pwd = rs.getString("password");
+        } catch (SQLException ignored) { }
         return new Customer(
             rs.getInt("customer_id"),
             rs.getString("name"),
             rs.getString("phone"),
             rs.getString("email"),
-            rs.getString("id_proof")
+            rs.getString("id_proof"),
+            pwd
         );
+    }
+
+    public Customer authenticate(String phone, String password) {
+        String sql = "SELECT * FROM customers WHERE phone = ? AND password = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, phone);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return mapRow(rs);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

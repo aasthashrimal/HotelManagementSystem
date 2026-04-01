@@ -11,6 +11,7 @@
             <Button text="← Back" onAction="#handleBack" styleClass="btn-back"/>
             <Label text="🛎 Hotel Services" styleClass="topbar-title"/>
             <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-outline-small"/>
             <Label fx:id="statusLabel" styleClass="status-label"/>
         </HBox>
     </top>
@@ -20,7 +21,7 @@
             <SplitPane dividerPositions="0.38" HBox.hgrow="ALWAYS">
 
             <!-- LEFT: Add Service Form -->
-            <VBox spacing="12" styleClass="panel">
+            <VBox spacing="12" styleClass="form-panel no-card-panel">
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
                     <content>
                         <VBox spacing="12" prefWidth="300" style="-fx-padding: 8;">
@@ -59,7 +60,7 @@
                             <Label text="Status *"/>
                             <ComboBox fx:id="updateStatusCombo" maxWidth="Infinity"/>
 
-                            <Button text="✔ Save Service" onAction="#handleMarkDone"
+                            <Button text="✔ Update Service" onAction="#handleUpdateService"
                                 styleClass="btn-secondary" maxWidth="Infinity"/>
 
                             <VBox spacing="4" styleClass="hint-box">

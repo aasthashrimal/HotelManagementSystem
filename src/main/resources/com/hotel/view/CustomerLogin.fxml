@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.hotel.controller.CustomerLoginController"
+           styleClass="root-pane" prefWidth="900" prefHeight="600">
+    <VBox alignment="CENTER" spacing="0" maxWidth="420" maxHeight="500" styleClass="login-card">
+        <VBox alignment="CENTER" spacing="6" styleClass="login-header">
+            <ImageView fitWidth="82" fitHeight="82" pickOnBounds="true" preserveRatio="true" styleClass="brand-logo">
+                <image>
+                    <Image url="@/assets/logo.png"/>
+                </image>
+            </ImageView>
+            <Label text="Aurelia Suites" styleClass="login-title"/>
+            <Label text="Guest Portal" styleClass="login-subtitle"/>
+        </VBox>
+
+        <VBox spacing="14" styleClass="login-form">
+            <Label fx:id="statusLabel" text="" styleClass="status-label" wrapText="true"/>
+
+            <Label text="Phone Number"/>
+            <TextField fx:id="phoneField" promptText="e.g. 9876543210"/>
+
+            <Label text="Password"/>
+            <PasswordField fx:id="passwordField" promptText="Enter password"/>
+
+            <VBox fx:id="loginBox" spacing="10">
+                <Button text="LOGIN" onAction="#handleLogin" styleClass="btn-primary" maxWidth="Infinity"/>
+                <Button text="Register a new account" onAction="#toggleRegister" styleClass="btn-outline" maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox fx:id="registerBox" spacing="10" visible="false" managed="false">
+                <Separator/>
+                <Label text="Create New Account" styleClass="form-title"/>
+                <TextField fx:id="regNameField" promptText="Full Name"/>
+                <TextField fx:id="regPhoneField" promptText="Phone Number"/>
+                <TextField fx:id="regEmailField" promptText="Email Address"/>
+                <PasswordField fx:id="regPasswordField" promptText="Password"/>
+                <Button text="Register &amp; Book" onAction="#handleRegister" styleClass="btn-primary" maxWidth="Infinity"/>
+                <Button text="Back to Login" onAction="#toggleRegister" styleClass="btn-outline" maxWidth="Infinity"/>
+            </VBox>
+
+            <Label text="Use your phone number and password to access bookings and services." styleClass="hint-text" wrapText="true"/>
+        </VBox>
+    </VBox>
+</StackPane>
