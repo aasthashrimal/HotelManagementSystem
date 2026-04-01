@@ -366,7 +366,7 @@ public class ServicesController {
             .orElse(false);
     }
 
-    @FXML 
+    @FXML
     private void handleRefresh() {
         Booking b = bookingCombo.getValue();
         loadServices(b);

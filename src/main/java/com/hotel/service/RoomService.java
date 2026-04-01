@@ -1,10 +1,16 @@
 package com.hotel.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.hotel.dao.RoomDAO;
 import com.hotel.model.Room;
 import com.hotel.model.RoomType;
-import java.time.LocalDate;
-import java.util.*;
 
 /**
  * WEEK 8 - COLLECTIONS: sorting and filtering rooms
@@ -15,11 +21,11 @@ public class RoomService {
     private final RoomDAO roomDAO = new RoomDAO();
 
     public List<Room> getAllRooms() {
-        // Enrich each room with today's actual availability from bookings table
+        // Enrich each room with active booking status for admin room table.
         List<Room> rooms = roomDAO.getAllRooms();
         for (Room r : rooms) {
-            boolean occupiedToday = roomDAO.isRoomOccupiedToday(r.getRoomNumber());
-            r.setAvailable(!occupiedToday);
+            boolean hasActiveBooking = roomDAO.hasActiveBooking(r.getRoomNumber());
+            r.setAvailable(!hasActiveBooking);
         }
         return rooms;
     }
@@ -35,6 +41,18 @@ public class RoomService {
     /** Available TODAY — used for dashboard stats */
     public List<Room> getAvailableRoomsToday() {
         return roomDAO.getAvailableRoomsToday();
+    }
+
+    public List<Room> getAvailableRooms() {
+        List<Room> rooms = getAllRooms();
+        rooms.removeIf(r -> !r.isAvailable());
+        return rooms;
+    }
+
+    public List<Room> getOccupiedRooms() {
+        List<Room> rooms = getAllRooms();
+        rooms.removeIf(Room::isAvailable);
+        return rooms;
     }
 
     // WEEK 8 - Sorting by price

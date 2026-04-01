@@ -1,17 +1,30 @@
 package com.hotel.controller;
 
 import com.hotel.main.MainApp;
-import com.hotel.model.*;
+import com.hotel.model.DeluxeRoom;
+import com.hotel.model.Room;
+import com.hotel.model.RoomType;
+import com.hotel.model.StandardRoom;
+import com.hotel.model.SuiteRoom;
 import com.hotel.service.RoomService;
+
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.beans.property.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 /**
  * WEEK 9 - JavaFX: Rooms screen
- * ADVANCE BOOKING: availability shown reflects actual bookings for today
+ * Availability shown reflects active bookings from customer/admin portals.
  */
 public class RoomsController {
 
@@ -51,9 +64,9 @@ public class RoomsController {
         colPrice.setCellValueFactory(d ->
                 new SimpleObjectProperty<>(d.getValue().getPricePerNight()));
 
-        // ADVANCE BOOKING: available flag is now set from bookings table for TODAY
+        // Available = no active booking (CONFIRMED/CHECKED_IN)
         colAvailable.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().isAvailable() ? "✔ Available Today" : "✘ Occupied Today"));
+            new SimpleStringProperty(d.getValue().isAvailable() ? "✔ Available" : "✘ Booked"));
 
         colAvailable.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(String item, boolean empty) {
@@ -73,16 +86,16 @@ public class RoomsController {
         roomTypeCombo.setItems(FXCollections.observableArrayList(RoomType.values()));
         roomTypeCombo.setValue(RoomType.STANDARD);
         filterCombo.setItems(FXCollections.observableArrayList(
-                "All Rooms", "Available Today", "Occupied Today", "By Price ↑", "By Price ↓",
+            "All Rooms", "Available", "Booked", "By Price ↑", "By Price ↓",
                 "STANDARD", "DELUXE", "SUITE"));
         filterCombo.setValue("All Rooms");
     }
 
     private void loadRooms() {
-        // getAllRooms() enriches each room with today's date-based availability
+        // getAllRooms() enriches each room with active booking-based availability
         roomList.setAll(roomService.getAllRooms());
         long avail = roomList.stream().filter(Room::isAvailable).count();
-        setStatus("Loaded " + roomList.size() + " rooms  |  " + avail + " available today.", false);
+        setStatus("Loaded " + roomList.size() + " rooms  |  " + avail + " available.", false);
     }
 
     @FXML
@@ -136,12 +149,8 @@ public class RoomsController {
     @FXML
     private void handleFilter() {
         switch (filterCombo.getValue()) {
-            case "Available Today"  -> roomList.setAll(roomService.getAvailableRoomsToday());
-            case "Occupied Today"   -> {
-                var all = roomService.getAllRooms();
-                all.removeIf(Room::isAvailable);
-                roomList.setAll(all);
-            }
+            case "Available"        -> roomList.setAll(roomService.getAvailableRooms());
+            case "Booked"           -> roomList.setAll(roomService.getOccupiedRooms());
             case "By Price ↑"       -> roomList.setAll(roomService.getRoomsSortedByPrice(true));
             case "By Price ↓"       -> roomList.setAll(roomService.getRoomsSortedByPrice(false));
             case "STANDARD"         -> roomList.setAll(roomService.getRoomsByType(RoomType.STANDARD));

@@ -26,6 +26,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -94,12 +95,61 @@ public class CustomerDashboardController {
         colAmount.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().getTotalAmount()));
         colStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getStatus()));
 
+        colStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                String status = item.toUpperCase();
+                setText(status);
+
+                setStyle(switch (status) {
+                    case "CONFIRMED" -> "-fx-text-fill:#1e40af;-fx-font-weight:bold;-fx-background-color:#dbeafe;";
+                    case "CHECKED_IN" -> "-fx-text-fill:#0891b2;-fx-font-weight:bold;-fx-background-color:#cffafe;";
+                    case "CHECKED_OUT" -> "-fx-text-fill:#475569;-fx-background-color:#e2e8f0;";
+                    case "CANCELLED" -> "-fx-text-fill:#991b1b;-fx-background-color:#fee2e2;";
+                    default -> "";
+                });
+            }
+        });
+
         bookingsTable.setItems(myBookings);
 
         // Services Table
         colServiceType.setCellValueFactory(d -> new SimpleStringProperty((String) d.getValue().get("service_type")));
         colServiceDesc.setCellValueFactory(d -> new SimpleStringProperty((String) d.getValue().get("description")));
         colServiceStatus.setCellValueFactory(d -> new SimpleStringProperty((String) d.getValue().get("status")));
+
+        // 🔥 ADD THIS BLOCK HERE
+        colServiceStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+
+                String status = item.toUpperCase();
+                setText(status);
+
+                setStyle(switch (status) {
+                    case "DONE" -> "-fx-text-fill:#166534;-fx-font-weight:bold;-fx-background-color:#dcfce7;";
+                    case "IN_PROGRESS" -> "-fx-text-fill:#1e40af;-fx-font-weight:bold;-fx-background-color:#dbeafe;";
+                    case "PENDING" -> "-fx-text-fill:#92400e;-fx-font-weight:bold;-fx-background-color:#fef3c7;";
+                    case "CANCELLED" -> "-fx-text-fill:#991b1b;-fx-font-weight:bold;-fx-background-color:#fee2e2;";
+                    default -> "-fx-text-fill:#475569;-fx-font-weight:bold;-fx-background-color:#e2e8f0;";
+                });
+            }
+        });
         
         servicesTable.setItems(myServices);
     }
@@ -109,6 +159,7 @@ public class CustomerDashboardController {
             public String toString(Room r) { return r == null ? "" : "#" + r.getRoomNumber() + " " + r.getRoomType() + " (Rs." + r.getPricePerNight() + ")"; }
             public Room fromString(String s) { return null; }
         });
+        roomCombo.setOnShowing(e -> refreshRooms());
         
         activeBookingCombo.setConverter(new javafx.util.StringConverter<>() {
             public String toString(Booking b) { return b == null ? "" : "Booking #" + b.getBookingId() + " (Room " + b.getRoomNumber() + ")"; }
@@ -160,7 +211,15 @@ public class CustomerDashboardController {
             roomCombo.setItems(FXCollections.observableArrayList());
             return;
         }
-        roomCombo.setItems(FXCollections.observableArrayList(roomService.getAvailableRoomsForDates(cIn, cOut)));
+        List<Room> available = roomService.getAvailableRoomsForDates(cIn, cOut);
+        roomCombo.setItems(FXCollections.observableArrayList(available));
+
+        Room selected = roomCombo.getValue();
+        if (selected != null) {
+            boolean stillAvailable = available.stream()
+                    .anyMatch(r -> r.getRoomNumber() == selected.getRoomNumber());
+            if (!stillAvailable) roomCombo.setValue(null);
+        }
     }
 
     private void updatePricePreview() {
@@ -181,6 +240,17 @@ public class CustomerDashboardController {
 
         if (r == null || in == null || out == null || !out.isAfter(in)) { 
             setStatus("Please select valid dates and room.", true); return; 
+        }
+
+        // Final server-side style recheck to avoid stale dropdown options.
+        List<Room> latestAvailable = roomService.getAvailableRoomsForDates(in, out);
+        boolean roomStillAvailable = latestAvailable.stream()
+                .anyMatch(x -> x.getRoomNumber() == r.getRoomNumber());
+        if (!roomStillAvailable) {
+            roomCombo.setItems(FXCollections.observableArrayList(latestAvailable));
+            roomCombo.setValue(null);
+            setStatus("Selected room was just booked. Please choose another room.", true);
+            return;
         }
 
         BookingService.BookingResult result = bookingService.bookRoom(c.getCustomerId(), r.getRoomNumber(), in, out);

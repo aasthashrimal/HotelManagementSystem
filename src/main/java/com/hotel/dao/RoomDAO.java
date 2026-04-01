@@ -1,9 +1,19 @@
 package com.hotel.dao;
 
-import com.hotel.model.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hotel.model.DeluxeRoom;
+import com.hotel.model.Room;
+import com.hotel.model.RoomType;
+import com.hotel.model.StandardRoom;
+import com.hotel.model.SuiteRoom;
 
 /**
  * DAO for Room operations.
@@ -160,6 +170,24 @@ public class RoomDAO {
             ps.setInt(1, roomNumber);
             ps.setString(2, tomorrow.toString());
             ps.setString(3, today.toString());
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException e) { e.printStackTrace(); return false; }
+    }
+
+    /**
+     * Returns true if the room has any active booking.
+     * Active booking = CONFIRMED or CHECKED_IN.
+     */
+    public boolean hasActiveBooking(int roomNumber) {
+        String sql = """
+            SELECT COUNT(*) FROM bookings
+            WHERE room_number = ?
+            AND status IN ('CONFIRMED','CHECKED_IN')
+        """;
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, roomNumber);
             ResultSet rs = ps.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } catch (SQLException e) { e.printStackTrace(); return false; }

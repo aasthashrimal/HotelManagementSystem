@@ -21,10 +21,10 @@
             <SplitPane dividerPositions="0.38" HBox.hgrow="ALWAYS">
 
             <!-- LEFT: Add Service Form -->
-            <VBox spacing="12" styleClass="form-panel no-card-panel">
+            <VBox spacing="12" styleClass="no-card-panel">
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
                     <content>
-                        <VBox spacing="12" prefWidth="300" style="-fx-padding: 8;">
+                        <VBox spacing="12" prefWidth="300" style="-fx-padding: 8; -fx-background-color: transparent;">
                             <Label text="Add / Update Service Request" styleClass="form-title"/>
 
                             <Label text="Select Active Booking *"/>

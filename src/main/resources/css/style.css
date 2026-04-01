@@ -510,6 +510,15 @@ TableView .table-cell {
     -fx-background-color: transparent;
 }
 
+/* ---- SPLIT PANE FIX ---- */
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
 .dashboard-content {
     -fx-padding: 20;
     -fx-background-color: linear-gradient(to bottom, #eaf0fa 0%, #e1e9f7 100%);

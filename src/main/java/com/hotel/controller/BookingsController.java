@@ -134,6 +134,7 @@ public class BookingsController {
             }
             public Room fromString(String s) { return null; }
         });
+        roomCombo.setOnShowing(e -> refreshRoomComboForDates());
 
         filterCombo.setItems(FXCollections.observableArrayList(
                 "All", "Active", "Upcoming", "CONFIRMED", "CHECKED_IN", "CHECKED_OUT", "CANCELLED"));
@@ -148,12 +149,22 @@ public class BookingsController {
         LocalDate checkOut = checkOutPicker.getValue();
         if (checkIn == null || checkOut == null || !checkOut.isAfter(checkIn)) {
             roomCombo.setItems(FXCollections.observableArrayList());
+            roomCombo.setValue(null);
             roomCombo.setPromptText("Fix dates first");
             return;
         }
+        Room selected = roomCombo.getValue();
         var rooms = roomService.getAvailableRoomsForDates(checkIn, checkOut);
         roomCombo.setItems(FXCollections.observableArrayList(rooms));
-        roomCombo.setValue(null);
+
+        if (selected != null) {
+            boolean stillAvailable = rooms.stream()
+                    .anyMatch(r -> r.getRoomNumber() == selected.getRoomNumber());
+            roomCombo.setValue(stillAvailable ? selected : null);
+        } else {
+            roomCombo.setValue(null);
+        }
+
         roomCombo.setPromptText(rooms.isEmpty()
                 ? "No rooms free for these dates"
                 : rooms.size() + " room(s) available");
@@ -189,6 +200,18 @@ public class BookingsController {
 
         confirm.showAndWait().ifPresent(btn -> {
             if (btn != ButtonType.OK) return;
+
+            // Final recheck to handle stale dropdown values.
+            var latestAvailable = roomService.getAvailableRoomsForDates(checkIn, checkOut);
+            boolean stillAvailable = latestAvailable.stream()
+                    .anyMatch(r -> r.getRoomNumber() == room.getRoomNumber());
+            if (!stillAvailable) {
+                roomCombo.setItems(FXCollections.observableArrayList(latestAvailable));
+                roomCombo.setValue(null);
+                setStatus("Selected room is no longer available. Please select another room.", true);
+                return;
+            }
+
             BookingService.BookingResult result = bookingService.bookRoom(
                     customer.getCustomerId(), room.getRoomNumber(), checkIn, checkOut);
             if (result.success) {
